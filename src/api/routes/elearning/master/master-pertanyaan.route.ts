@@ -58,7 +58,8 @@ export default (app: Router) => {
 
       return res.status(200).json({
         message: data.length === 0 ? "Data tidak ditemukan" : "Sukses",
-        data: data,
+        length: data.length,
+        data: data
       });
     } catch (e) {
       next(e);

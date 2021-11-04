@@ -28,7 +28,6 @@ export default (app: Router) => {
                     message: "Data berhasil disimpan",
                 });
             } catch (e) {
-                console.log(e);
                 next(e);
             }
         }

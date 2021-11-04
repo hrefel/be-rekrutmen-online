@@ -15,17 +15,17 @@ export default class PertanyaanDanJawabanService {
     @Inject("masterPertanyaanModel") private masterPertanyaanModel
   ) {}
 
-  public async GetPertanyaanByIdSoal(id) {
+  public async GetPertanyaanByIdSoal(idSoal) {
     try {
       let result = [];
 
-      const resPertanyaanGroup = await this.masterPertanyaanGroupServiceInstance.GetDataPertanyaanGroup({idSoal: id}).then((res: any) => {
+      const resPertanyaanGroup = await this.masterPertanyaanGroupServiceInstance.GetDataPertanyaanGroup({idSoal: idSoal}).then((res: any) => {
         return res;
       });
 
       
       const resPertanyaan:any = await this.masterPertanyaanServiceInstance.GetPertanyaanByParams({
-        idSoal: id
+        idSoal: idSoal
       }).then((res: any) => {
         return res;
       });
@@ -45,7 +45,9 @@ export default class PertanyaanDanJawabanService {
 
         for(let ii = 0; ii < jawaban.length; ii++) {
           result[i].pilihanJawaban.push({
-            namaJawaban: jawaban[i].namaJawaban
+            namaJawaban: jawaban[ii].namaJawaban,
+            id: jawaban[ii]._id,
+            jawabanBenar: jawaban[ii].jawabanBenar
           });
         }
 
@@ -78,5 +80,32 @@ export default class PertanyaanDanJawabanService {
     } catch (e) {
       throw e;
     }
+  }
+
+  public async SimpanJawabanDanPertanyaan(idSoal, body) {
+    try {
+      let bodySavePertanyaan = {
+        namaPertanyaan: body.namaPertanyaan,
+        idSoal: idSoal
+      }
+
+      
+      const pertanyaan = await this.masterPertanyaanServiceInstance.TambahPertanyaan(bodySavePertanyaan).then(res => {
+        for(let i = 0; i < body.listJawaban.length; i++) {
+          let bodySaveJawaban = {
+            jawabanBenar: body.listJawaba[i].jawabanBenar,
+            namaJawaban: body.listJawaban[i].namaJawaban,
+            idPertanyaan: res._id
+          }
+          this.jawabanServiceInstance.TambahJawaban(bodySaveJawaban);
+        }
+        return res;
+      });
+
+      return pertanyaan;
+    } catch (e) {
+      throw e;
+    }
+   
   }
 }

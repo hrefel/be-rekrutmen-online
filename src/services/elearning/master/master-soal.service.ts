@@ -26,11 +26,19 @@ export default class MasterSoalService {
     }
   }
 
-  public async GetSoalByParams(param: object) {
+  public async GetSoalByParams(param) {
     try {
-      const data = this.masterSoalModel.find(param);
-
+      const data = param._id ? this.masterSoalModel.findOne(param) : this.masterSoalModel.find(param);
+      
       return data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  public async EditSoal(data) {
+    try {
+      return this.masterSoalModel.updateOne({_id: data._id}, data);
     } catch (e) {
       throw e;
     }
@@ -38,7 +46,7 @@ export default class MasterSoalService {
 
   public async DeleteData(data) {
       try {
-          return this.masterSoalModel.updateOne({_id: data._id}, data);;
+          return this.masterSoalModel.updateOne({_id: data._id}, data);
       } catch (e) {
           throw e;
       }

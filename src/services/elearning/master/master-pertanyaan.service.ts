@@ -26,10 +26,16 @@ export default class MasterPertanyaanService {
         }
     }
 
-    public async GetPertanyaanByParams(param: object) {
+    public async GetPertanyaanByParams(param: any) {
         try {
-            const data = this.masterPertanyaanModel.find(param);
+            // FIND By ObjectId
+            let objId = require('mongoose').Types.ObjectId;
+            let parameter = {
+                idSoal: new objId(param.idSoal),
+                statusEnabled: true
+            }
             
+            const data = this.masterPertanyaanModel.find(parameter);
 
             return data;
         } catch (e) {
